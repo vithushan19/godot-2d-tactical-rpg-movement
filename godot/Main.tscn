@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://GameBoard/Cursor/Cursor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Units/Unit.tscn" type="PackedScene" id=2]
@@ -10,6 +10,11 @@
 [ext_resource path="res://Units/bear.png" type="Texture" id=8]
 [ext_resource path="res://Units/bugcat.png" type="Texture" id=9]
 [ext_resource path="res://Background/Map.tscn" type="PackedScene" id=10]
+[ext_resource path="res://dices.png" type="Texture" id=11]
+[ext_resource path="res://dice3.wav" type="AudioStream" id=12]
+[ext_resource path="res://dice1.wav" type="AudioStream" id=13]
+[ext_resource path="res://dice4.wav" type="AudioStream" id=14]
+[ext_resource path="res://dice2.wav" type="AudioStream" id=15]
 
 [sub_resource type="Curve2D" id=1]
 resource_local_to_scene = true
@@ -63,5 +68,34 @@ curve = SubResource( 3 )
 skin = ExtResource( 7 )
 move_range = 5
 skin_offset = Vector2( 6, 17 )
+
+[node name="DiceButton" type="Button" parent="GameBoard"]
+margin_left = 323.0
+margin_top = 28.0
+margin_right = 378.0
+margin_bottom = 83.0
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dice" type="Sprite" parent="GameBoard"]
+position = Vector2( 350.598, 55.7769 )
+texture = ExtResource( 11 )
+vframes = 2
+hframes = 3
+
+[node name="DiceAudio1" type="AudioStreamPlayer2D" parent="GameBoard"]
+stream = ExtResource( 13 )
+
+[node name="DiceAudio2" type="AudioStreamPlayer2D" parent="GameBoard"]
+stream = ExtResource( 15 )
+
+[node name="DiceAudio3" type="AudioStreamPlayer2D" parent="GameBoard"]
+stream = ExtResource( 12 )
+
+[node name="DiceAudio4" type="AudioStreamPlayer2D" parent="GameBoard"]
+stream = ExtResource( 14 )
 [connection signal="accept_pressed" from="GameBoard/Cursor" to="GameBoard" method="_on_Cursor_accept_pressed"]
 [connection signal="moved" from="GameBoard/Cursor" to="GameBoard" method="_on_Cursor_moved"]
+[connection signal="pressed" from="GameBoard/DiceButton" to="GameBoard" method="_on_Button_pressed"]

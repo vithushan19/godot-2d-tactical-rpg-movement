@@ -13,6 +13,13 @@ export var grid: Resource
 var _units := {}
 var _active_unit: Unit
 var _walkable_cells := []
+var effects = true
+var diced = false
+var dice = 0
+var tempElapsed = 0
+var diceMovement = 0
+
+var diceTime = 0
 
 onready var _unit_overlay: UnitOverlay = $UnitOverlay
 onready var _unit_path: UnitPath = $UnitPath
@@ -21,6 +28,19 @@ onready var _unit_path: UnitPath = $UnitPath
 func _ready() -> void:
 	_reinitialize()
 
+func _process(delta):
+	tempElapsed = tempElapsed + delta
+	
+	if diced:
+		if tempElapsed < diceTime:
+			diceMovement = diceMovement + delta
+			if diceMovement >= 0.03:
+				$Dice.frame = randi() % 6
+				diceMovement = 0
+		else:
+			diced = false
+			$DiceButton.disabled = false
+			$Dice.frame = dice
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _active_unit and event.is_action_pressed("ui_cancel"):
@@ -135,3 +155,37 @@ func _on_Cursor_accept_pressed(cell: Vector2) -> void:
 func _on_Cursor_moved(new_cell: Vector2) -> void:
 	if _active_unit and _active_unit.is_selected:
 		_unit_path.draw(_active_unit.cell, new_cell)
+
+
+func dice():
+	if diced:
+		return
+		
+	dice = randi() % 6
+	$Dice.frame = dice
+	$DiceButton.disabled = true
+	diced = true
+	tempElapsed = 0
+	diceMovement = 0
+	
+	var diceType = randi() % 4
+	if diceType == 0:
+		diceTime = 0.3
+		if effects:
+			$DiceAudio1.play()
+	if diceType == 1:
+		diceTime = 0.1
+		if effects:
+			$DiceAudio2.play()
+	if diceType == 2:
+		diceTime = 0.5
+		if effects:
+			$DiceAudio3.play()
+	if diceType == 3:
+		diceTime = 0.2
+		if effects:
+			$DiceAudio4.play()	
+
+
+func _on_Button_pressed():
+	dice()
